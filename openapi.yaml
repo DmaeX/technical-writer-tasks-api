@@ -61,6 +61,11 @@ components:
     ComponentEnum:
       type: string
       enum: [API_DOCS, HELP_CENTER, SDK_DOCS, OAS_FILE]
+    TaskResponse:
+      type: object
+      properties: 
+        task_id:
+          type: string
 security:
   - ApiKeyAuth: []
 paths:
@@ -103,3 +108,21 @@ paths:
     post:
       summary: Add a new technical writer task.
       operationId: addTask
+      requestBody: 
+        description: A new Task object.
+        required: true
+        content:
+          application/json: 
+            schema: 
+              $ref: '#/components/schemas/Task'
+      responses:
+        '200':
+          description: Returns the task_id of the uploaded task.
+          content:
+            application/json:
+              schema: 
+                $ref: '#/components/schemas/TaskResponse'
+        '400':
+          description: Bad request, malformed data.
+        '401':
+          description: Unauthorized, API key missing or invalid.
