@@ -66,6 +66,11 @@ components:
       properties: 
         task_id:
           type: string
+    Error:
+      type: object
+      properties: 
+        description:
+          type: string    
 security:
   - ApiKeyAuth: []
 paths:
@@ -104,6 +109,16 @@ paths:
                   $ref: '#/components/schemas/Task'
         '401':
           description: Unauthorized, API key missing or invalid.
+          content:
+            application/json:
+              schema: 
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Server error.
+          content:
+            application/json:
+              schema: 
+                $ref: '#/components/schemas/Error'
   /task:
     post:
       summary: Add a new technical writer task.
@@ -124,5 +139,19 @@ paths:
                 $ref: '#/components/schemas/TaskResponse'
         '400':
           description: Bad request, malformed data.
+          content:
+            application/json:
+              schema: 
+                $ref: '#/components/schemas/Error'          
         '401':
           description: Unauthorized, API key missing or invalid.
+          content:
+            application/json:
+              schema: 
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Server error.
+          content:
+            application/json:
+              schema: 
+                $ref: '#/components/schemas/Error'
