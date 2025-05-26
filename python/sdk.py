@@ -1,5 +1,10 @@
-import request 
+import requests 
 from enum import Enum
+
+'''
+Rule of thumb: Python runs from top to bottom. 
+Declare variables at the beginning
+'''
 
 class StatusEnum(Enum): 
     OPEN = "OPEN"
@@ -26,18 +31,33 @@ class Task:
     component: ComponentEnum
     connected_tasks: list[ConnectedTask]
 
+class TaskInput:
+    title: str
+    description: str
+    status: StatusEnum
+    component: ComponentEnum
+    connected_tasks: list[ConnectedTask]
+
 class TaskResponse:
     task_id: str
+
+class Error:
+    description: str
 
 class TechnicalWriterTasks:
     def __init__(self, api_key: str) -> None:
         self.api_key = api_key
-    def tasks() -> list[Task]:
-        response = requests.get('https://api.techwriter.xyz/tasks')
+    def tasks(status: StatusEnum, component: ComponentEnum, updatedAfter: str) -> list[Task]:
+        headers = {'X-API-KEY': 'apiKey'}
+        params = {'status': status, 'component': component, 'updatedAfter': updatedAfter}
+        response = requests.get('https://api.techwriter.xyz/tasks', headers=headers, params=params)
         print(response.status_code) 
+
     def upload(task: Task) -> TaskResponse:
-        response = requests.post('https://api.techwriter.xyz/tasks')
+        headers = {'X-API-KEY': 'apiKey'}
+        payload = {'task_id': task.task_id, 'title': task.title, 'description': task.description, 'status': task.status, 'component': task.component, 'connected_tasks': task.connected_tasks}
+        response = requests.post('https://api.techwriter.xyz/task', headers=headers, payload=payload)
         print(response.status_code)  
 
-
-
+TechnicalWriterTasks.tasks()
+TechnicalWriterTasks.upload()
